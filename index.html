@@ -6474,12 +6474,11 @@
 
                 galacticAngle = Math.PI;
                 createGalacticLabels();
-                // Camera between galaxy and GA, elevated — both objects visible.
-                // Galaxy starts at (GALACTIC_R=300, 0, 0), GA is at (GALACTIC_R+GA_ORBIT_R=1500, 0, 0).
-                // Camera at midpoint X, elevated, further back to encompass larger galaxies.
-                animateCameraTo(new THREE.Vector3(900, 2000, 2200));
+                // Camera close to the Milky Way, slightly elevated for a nice top-down angle.
+                // Galaxy is at (GALACTIC_R=300, 0, 0).
+                animateCameraTo(new THREE.Vector3(300, 500, 650));
                 const dur = 2000, ps = pitch, ys = yaw, t0 = Date.now();
-                const tYaw = 0, tPitch = -0.71;
+                const tYaw = 0, tPitch = -0.65;
                 (function step() {
                     const t = Math.min(1, (Date.now() - t0) / dur);
                     const e = t * t * (3 - 2 * t);
