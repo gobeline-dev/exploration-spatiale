@@ -13,13 +13,14 @@
             overflow: hidden;
             background: #000;
             font-family: 'Nunito', sans-serif;
+            overscroll-behavior: none;
         }
 
         body.pointer-locked {
             cursor: none;
         }
 
-        canvas { display: block; }
+        canvas { display: block; touch-action: none; }
 
         /* Custom cursor */
         #custom-cursor {
@@ -1493,148 +1494,319 @@
         #colorblind-toggle:hover { background: rgba(255,255,255,0.18); }
         #colorblind-toggle.active { background: rgba(100,200,255,0.25); border-color: #66ccff; color: #66ccff; }
 
-        /* ── Touch joystick ── */
+        /* ── Safe areas (notch / home bar) ── */
+        :root {
+            --sat: env(safe-area-inset-top,    0px);
+            --sab: env(safe-area-inset-bottom, 0px);
+            --sal: env(safe-area-inset-left,   0px);
+            --sar: env(safe-area-inset-right,  0px);
+        }
+
+        /* ── Joystick ── */
         #touch-controls {
             position: fixed;
-            bottom: 28px;
-            left: 16px;
+            bottom: calc(24px + var(--sab));
+            left:   calc(16px + var(--sal));
             display: none;
             flex-direction: row;
             align-items: flex-end;
-            gap: 10px;
+            gap: 12px;
             z-index: 150;
             pointer-events: auto;
         }
         .is-mobile #touch-controls { display: flex; }
+
         #touch-joystick-zone {
-            width: 108px;
-            height: 108px;
+            width: 116px; height: 116px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.07);
-            border: 2px solid rgba(255,255,255,0.18);
+            background: rgba(255,255,255,0.05);
+            border: 1.5px solid rgba(255,255,255,0.14);
+            box-shadow: inset 0 0 24px rgba(0,0,0,0.35), 0 4px 20px rgba(0,0,0,0.45);
             position: relative;
             touch-action: none;
-            user-select: none;
-            -webkit-user-select: none;
+            user-select: none; -webkit-user-select: none;
         }
+        /* Tickmarks directionnels */
+        #touch-joystick-zone::before,
+        #touch-joystick-zone::after {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.18);
+            border-radius: 2px;
+            left: 50%; top: 50%;
+            pointer-events: none;
+        }
+        #touch-joystick-zone::before { width: 2px; height: 70%; transform: translate(-50%, -50%); }
+        #touch-joystick-zone::after  { width: 70%; height: 2px; transform: translate(-50%, -50%); }
+
         #touch-joystick-knob {
-            width: 44px;
-            height: 44px;
+            width: 48px; height: 48px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.30);
-            border: 2px solid rgba(255,255,255,0.55);
+            background: radial-gradient(circle at 38% 32%, rgba(255,255,255,0.55), rgba(255,255,255,0.12));
+            border: 1.5px solid rgba(255,255,255,0.45);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.35);
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             pointer-events: none;
+            transition: transform 0.05s;
         }
+
         #touch-vertical-btns {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-bottom: 6px;
         }
         .touch-vbtn {
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.10);
-            border: 2px solid rgba(255,255,255,0.22);
-            color: #fff;
-            font-size: 1.4em;
+            width: 52px; height: 52px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(255,255,255,0.16);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+            color: rgba(255,255,255,0.85);
+            font-size: 1.3em;
             display: flex; align-items: center; justify-content: center;
             touch-action: none;
             user-select: none; -webkit-user-select: none;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.1s, transform 0.1s;
         }
-        .touch-vbtn:active { background: rgba(255,255,255,0.25); }
+        .touch-vbtn:active {
+            background: rgba(255,255,255,0.2);
+            transform: scale(0.92);
+        }
 
-        /* ── Mobile responsive ── */
+        /* ── Mobile UX — Professional ── */
         @media (max-width: 768px) {
-            /* Welcome */
-            .welcome-title  { font-size: 2.2em; }
-            .welcome-rocket { font-size: 2.5em; margin-bottom: 15px; }
-            .welcome-subtitle { font-size: 1em; margin-bottom: 20px; }
-            .name-input { width: 86vw; font-size: 1.1em; padding: 12px 18px; }
-            .start-btn  { padding: 12px 32px; font-size: 1.1em; letter-spacing: 1px; }
 
-            /* Hide desktop-only */
-            .hud-controls { display: none !important; }
-            #custom-cursor { display: none !important; }
-            .minimap { display: none !important; }
+            /* Désactiver le tap highlight global */
+            * { -webkit-tap-highlight-color: transparent; }
+
+            /* ── Écran de bienvenue ── */
+            .welcome-title    { font-size: 2em; }
+            .welcome-rocket   { font-size: 2.6em; margin-bottom: 12px; }
+            .welcome-subtitle { font-size: 0.95em; margin-bottom: 10px; }
+            .welcome-release  { font-size: 0.72em; margin-bottom: 24px; }
+            .name-label       { font-size: 1.05em; }
+            .name-input {
+                width: min(340px, 88vw);
+                font-size: 1.05em;
+                padding: 14px 18px;
+            }
+            .start-btn {
+                padding: 14px 0;
+                font-size: 1.05em;
+                letter-spacing: 1px;
+                width: min(340px, 88vw);
+            }
+
+            /* ── Cacher les éléments desktop ── */
+            .hud-controls    { display: none !important; }
+            #custom-cursor   { display: none !important; }
+            .minimap         { display: none !important; }
             .speed-indicator { display: none !important; }
+            #colorblind-toggle { display: none !important; }
 
-            /* Mode toggle — top center, compact */
-            .mode-toggle { top: 8px; padding: 5px 12px; gap: 8px; font-size: 0.82em; }
+            /* ── Mode toggle — pill compact ── */
+            .mode-toggle {
+                top: calc(8px + var(--sat));
+                padding: 6px 14px;
+                gap: 10px;
+                font-size: 0.8em;
+                border-radius: 22px;
+            }
+            .orbit-speed-control { display: none; } /* Masqué sur mobile, accessible via menu */
 
-            /* Hamburger menu */
+            /* ── Bouton hamburger ── */
             #mobile-menu-btn {
                 display: flex;
                 align-items: center; justify-content: center;
-                width: 40px; height: 40px;
-                border-radius: 50%;
-                background: rgba(0,0,0,0.65);
-                border: 1px solid rgba(255,255,255,0.22);
-                color: #fff; font-size: 1.2em;
+                width: 44px; height: 44px;
+                border-radius: 14px;
+                background: rgba(8, 12, 38, 0.82);
+                border: 1px solid rgba(255,255,255,0.14);
+                color: #fff;
+                font-size: 1.15em;
                 cursor: pointer;
-                backdrop-filter: blur(10px);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
                 pointer-events: auto;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+                box-shadow: 0 4px 18px rgba(0,0,0,0.45);
                 flex-shrink: 0;
-                align-self: flex-end;
+                align-self: flex-start;
+                transition: background 0.15s, transform 0.12s;
             }
+            #mobile-menu-btn:active { background: rgba(20, 30, 80, 0.95); transform: scale(0.93); }
 
-            /* Action buttons — hamburger, placé sous le mode-toggle */
-            .hud-action-buttons { top: 58px; right: 8px; gap: 4px; align-items: flex-end; opacity: 1; }
+            /* ── Conteneur des boutons d'action ── */
+            .hud-action-buttons {
+                top: calc(8px + var(--sat));
+                right: calc(8px + var(--sar));
+                gap: 0;
+                align-items: flex-end;
+                opacity: 1;
+            }
+            /* Menu ouvert → panel glass */
+            .hud-action-buttons.open {
+                background: rgba(6, 10, 32, 0.94);
+                backdrop-filter: blur(28px);
+                -webkit-backdrop-filter: blur(28px);
+                border: 1px solid rgba(255,255,255,0.10);
+                border-radius: 18px;
+                padding: 10px;
+                box-shadow: 0 12px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.04);
+                align-items: stretch;
+                gap: 4px;
+            }
+            .hud-action-buttons.open #mobile-menu-btn {
+                align-self: flex-end;
+                margin-bottom: 4px;
+                width: 38px; height: 38px;
+                font-size: 1em;
+                border-radius: 10px;
+            }
+            /* Collapsed : tout caché sauf le bouton hamburger */
             .hud-action-buttons:not(.open) .hud-big-btn,
             .hud-action-buttons:not(.open) .hud-action-sep,
             .hud-action-buttons:not(.open) #hud-extras,
             .hud-action-buttons:not(.open) .hud-nav-btn { display: none !important; }
-            .hud-action-buttons.open { opacity: 1; }
-            .hud-big-btn { font-size: 0.78em; padding: 6px 12px; }
 
-            /* Masquer le conteneur nav séparé — le bouton est dans le hamburger */
+            /* Boutons dans le menu — touch targets 44px */
+            .hud-big-btn {
+                min-height: 44px;
+                padding: 0 14px;
+                font-size: 0.84em;
+                font-family: 'Nunito', sans-serif;
+                font-weight: 700;
+                border-radius: 10px;
+                letter-spacing: 0.01em;
+                justify-content: flex-start;
+                gap: 10px;
+                white-space: nowrap;
+            }
+            .hud-nav-btn {
+                min-height: 44px;
+                padding: 0 14px;
+                font-size: 0.84em;
+                font-family: 'Nunito', sans-serif;
+                font-weight: 700;
+                border-radius: 10px;
+                gap: 10px;
+                white-space: nowrap;
+            }
+            .hud-action-sep { margin: 2px 0; height: 1px; }
+
+            /* Cacher le conteneur nav séparé */
             .hud-nav-buttons { display: none !important; }
-            .hud-nav-btn { font-size: 0.78em; padding: 6px 12px; }
 
-            /* Tour bar — compact */
-            .tour-bar { top: 55px; padding: 7px 10px; gap: 7px; max-width: 94vw; flex-wrap: wrap; justify-content: center; }
-            .tour-btn  { padding: 5px 9px; font-size: 0.74em; }
-            .tour-dot  { width: 8px; height: 8px; }
+            /* ── Barre de visite guidée ── */
+            .tour-bar {
+                top: calc(62px + var(--sat));
+                padding: 10px 14px;
+                gap: 8px;
+                max-width: calc(100vw - 32px);
+                flex-wrap: wrap;
+                justify-content: center;
+                border-radius: 16px;
+            }
+            .tour-btn {
+                min-height: 40px;
+                padding: 0 14px;
+                font-size: 0.8em;
+                font-family: 'Nunito', sans-serif;
+                font-weight: 700;
+                border-radius: 9px;
+            }
+            .tour-dot { width: 9px; height: 9px; }
 
-            /* Planet info — bottom sheet */
+            /* ── Fiche planète — bottom sheet ── */
             #planet-info {
                 right: 0; left: 0; top: auto; bottom: 0;
                 width: 100%; max-width: 100%;
-                max-height: 58vh;
-                border-radius: 18px 18px 0 0;
+                max-height: 64vh;
+                border-radius: 22px 22px 0 0;
+                padding: 28px 18px calc(20px + var(--sab)) 18px;
                 overflow-y: auto;
-                animation: slideInBottom 0.4s cubic-bezier(0.34,1.56,0.64,1);
+                overflow-x: hidden;
+                animation: slideInBottom 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                -webkit-overflow-scrolling: touch;
+            }
+            /* Drag handle */
+            #planet-info::before {
+                content: '';
+                position: absolute;
+                top: 10px; left: 50%;
+                transform: translateX(-50%);
+                width: 38px; height: 4px;
+                background: rgba(255,255,255,0.22);
+                border-radius: 2px;
             }
             @keyframes slideInBottom {
-                from { transform: translateY(60px); opacity: 0; }
+                from { transform: translateY(80px); opacity: 0; }
                 to   { transform: translateY(0);    opacity: 1; }
             }
+            .planet-info-close { width: 40px; height: 40px; top: 10px; right: 12px; }
+            .planet-info-name  { font-size: 1.2em; }
+            .planet-info-description { font-size: 0.9em; }
+            .fact-value { font-size: 0.95em; }
 
-            /* Galactic panel — top-left, narrower */
+            /* ── Panneau galactique ── */
             #galactic-panel {
-                top: 8px; left: 8px;
-                width: calc(55vw); max-width: 230px;
-                padding: 10px 12px; font-size: 0.78em;
-                max-height: 38vh; overflow-y: auto;
+                top: calc(8px + var(--sat));
+                left: calc(8px + var(--sal));
+                width: min(250px, 58vw);
+                max-width: none;
+                padding: 10px 12px;
+                font-size: 0.76em;
+                border-radius: 16px;
+                max-height: 44vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
-            #galactic-panel h3 { font-size: 1em; margin-bottom: 8px; }
+            #galactic-panel h3 {
+                font-size: 0.95em;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
 
-            /* Language / colorblind */
-            #lang-toggle      { bottom: 8px; right: 8px; font-size: 0.88em; padding: 5px 10px; }
-            #colorblind-toggle{ bottom: 8px; left: 8px;  font-size: 0.78em; padding: 5px 9px; }
+            /* ── Contrôle de langue ── */
+            #lang-toggle {
+                bottom: calc(24px + var(--sab));
+                right: calc(12px + var(--sar));
+                font-size: 0.9em;
+                padding: 9px 14px;
+                min-height: 40px;
+                border-radius: 22px;
+                display: flex;
+                align-items: center;
+            }
 
-            /* Quiz */
-            .quiz-card { padding: 22px 14px; border-radius: 16px; }
-            .quiz-question { font-size: 1.15em; margin-bottom: 18px; }
-            .quiz-answer   { padding: 11px 13px; font-size: 0.92em; }
+            /* ── Quiz ── */
+            .quiz-card {
+                padding: 28px 18px;
+                border-radius: 22px;
+                width: 96%;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            .quiz-question { font-size: 1.1em; line-height: 1.45; margin-bottom: 20px; }
+            .quiz-answer   { min-height: 52px; padding: 0 16px; font-size: 0.92em; border-radius: 12px; display: flex; align-items: center; }
 
-            /* Celestial panel */
-            .celestial-panel { padding: 16px 14px; }
+            /* ── Objets célestes ── */
+            .celestial-panel { padding: 20px 16px; border-radius: 22px; }
+            .celestial-panel-title { font-size: 1.3em; }
+
+            /* ── Compteur de lancement ── */
+            #launch-count { font-size: clamp(4.5em, 22vw, 9em); }
+            #launch-count.ignition { font-size: clamp(1.5em, 8vw, 1.8em); }
+            #launch-count.go { font-size: clamp(2em, 10vw, 2.8em); }
+
+            /* ── Labels planètes — Nunito pour lisibilité ── */
+            .planet-label { font-family: 'Nunito', sans-serif; font-weight: 700; }
         }
     </style>
 </head>
@@ -5003,6 +5175,7 @@
                 }, { passive: true });
 
                 renderer.domElement.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
                     for (const t of e.changedTouches) {
                         if (t.identifier === touchLook.id) {
                             yaw   -= (t.clientX - touchLook.lastX) * 0.004;
@@ -5012,7 +5185,7 @@
                             touchLook.lastY = t.clientY;
                         }
                     }
-                }, { passive: true });
+                }, { passive: false });
 
                 const endLook = (e) => {
                     for (const t of e.changedTouches) {
@@ -5071,6 +5244,7 @@
         //  LAUNCH ANIMATION
         // ============================================
         function startLaunchAnimation() {
+            if (launchAnimating) return;
             playerName = document.getElementById('player-name-input').value.trim() || (currentLang === 'en' ? 'Astronaut' : 'Astronaute');
             document.getElementById('welcome-screen').style.display = 'none';
 
@@ -5153,6 +5327,7 @@
         }
 
         function beginLiftoff() {
+            if (!launchRocket) return;
             const ep = planets.terre.mesh.position;
             const r  = planets.terre.data.radius;
             const skyEl = document.getElementById('sky-overlay');
