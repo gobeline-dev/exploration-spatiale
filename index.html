@@ -1947,7 +1947,7 @@
             </div>
             <div class="hud-action-sep mobile-colorblind-sep"></div>
             <div class="hud-big-btn mobile-orbit-speed-control" id="mobile-orbit-speed-control">
-                <span>🌀 Orbites x<span id="mobile-orbit-speed-val">5</span></span>
+                <span><span id="mobile-orbit-label">🌀 Orbites</span> x<span id="mobile-orbit-speed-val">5</span></span>
                 <input type="range" id="mobile-orbit-speed-slider" min="1" max="20" value="5" step="1">
             </div>
             <button class="hud-big-btn" id="mobile-colorblind-btn">👁️ Daltonien</button>
@@ -2975,6 +2975,7 @@
                 btnBackSun: "☀️ Retour au Soleil",
                 btnBackNebuleuse: "🌫️ Retour à la Nébuleuse",
                 btnColorblind: "👁️ Daltonien",
+                orbitLabel: "🌀 Orbites",
                 welcomeTitle: "Explorateur Spatial",
                 btnExtras: "⚙️ Extras"
             },
@@ -3013,6 +3014,7 @@
                 btnBackSun: "☀️ Back to Sun",
                 btnBackNebuleuse: "🌫️ Back to Nebula",
                 btnColorblind: "👁️ Colour blind",
+                orbitLabel: "🌀 Orbits",
                 welcomeTitle: "Space Explorer",
                 btnExtras: "⚙️ Extras"
             }
@@ -3055,6 +3057,7 @@
             set('btn-back-sun', (typeof currentView !== 'undefined' && currentView === 'celestial') ? T('btnBackNebuleuse') : T('btnBackSun'));
             set('colorblind-toggle', T('btnColorblind'));
             set('mobile-colorblind-btn', T('btnColorblind'));
+            set('mobile-orbit-label', T('orbitLabel'));
             set('welcome-title', T('welcomeTitle'));
             set('btn-toggle-extras', T('btnExtras'));
 
@@ -5048,6 +5051,10 @@
             const toggleColorblind = () => {
                 document.body.classList.toggle('colorblind-mode');
                 const isOn = document.body.classList.contains('colorblind-mode');
+                const filterVal = isOn ? "url('#colorblind-filter')" : '';
+                if (renderer && renderer.domElement) renderer.domElement.style.filter = filterVal;
+                const flareCanvas = document.getElementById('flare-canvas');
+                if (flareCanvas) flareCanvas.style.filter = filterVal;
                 document.getElementById('colorblind-toggle').classList.toggle('active', isOn);
                 const mobileBtn = document.getElementById('mobile-colorblind-btn');
                 if (mobileBtn) mobileBtn.classList.toggle('active', isOn);
