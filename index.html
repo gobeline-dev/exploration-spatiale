@@ -876,17 +876,14 @@
         #btn-toggle-extras { background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%); color: #d8f3dc; }
         #btn-toggle-extras.active { background: linear-gradient(135deg, #52b788 0%, #2d6a4f 100%); color: #fff; box-shadow: 0 0 14px rgba(82,183,136,0.5), inset 0 1px 0 rgba(255,255,255,0.2); }
         #mobile-menu-btn { display: none; }
-        #mobile-colorblind-btn { display: none; background: linear-gradient(135deg, #1a2a4a 0%, #0d1a2e 100%); }
         #mobile-orbit-speed-control { display: none; }
-        .mobile-colorblind-sep { display: none; }
         .mobile-orbit-speed-control { background: linear-gradient(135deg, #1a2a4a 0%, #0d1a2e 100%); flex-direction: column; align-items: stretch; gap: 6px; cursor: default; }
         .mobile-orbit-speed-control span { font-size: 0.82em; color: #ccd6f6; }
         .mobile-orbit-speed-control #mobile-orbit-speed-val { color: #ffd700; }
         #mobile-orbit-speed-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.18); outline: none; cursor: pointer; }
         #mobile-orbit-speed-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #ffd700; cursor: pointer; box-shadow: 0 0 6px rgba(255,215,0,0.6); }
         #mobile-orbit-speed-slider::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #ffd700; cursor: pointer; border: none; box-shadow: 0 0 6px rgba(255,215,0,0.6); }
-        #mobile-colorblind-btn.active { background: rgba(100,200,255,0.25); border-color: #66ccff; color: #66ccff; box-shadow: 0 0 14px rgba(100,200,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2); }
-        .btn-view { background: linear-gradient(135deg, #334155 0%, #1e293b 100%); }
+.btn-view { background: linear-gradient(135deg, #334155 0%, #1e293b 100%); }
         .btn-view.active { box-shadow: 0 0 20px rgba(255,255,255,0.4), inset 0 1px 0 rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.5); }
         .btn-solar-view { background: linear-gradient(135deg, #ffd700 0%, #cc8800 100%); color: #111; }
         .btn-celestial { background: linear-gradient(135deg, #14b8a6 0%, #0a7066 100%); }
@@ -1637,9 +1634,7 @@
                 border-radius: 22px;
             }
             .orbit-speed-control { display: none; } /* Masqué sur mobile, accessible via menu */
-            #mobile-colorblind-btn { display: flex; }
             #mobile-orbit-speed-control { display: flex; }
-            .mobile-colorblind-sep { display: block; }
 
             /* ── Bouton hamburger ── */
             #mobile-menu-btn {
@@ -1945,12 +1940,10 @@
             <div id="hud-extras" style="display:none; width:100%">
                 <button class="hud-big-btn" id="btn-toggle-extras" onclick="toggleAllExtras()">⚙️ Extras</button>
             </div>
-            <div class="hud-action-sep mobile-colorblind-sep"></div>
             <div class="hud-big-btn mobile-orbit-speed-control" id="mobile-orbit-speed-control">
                 <span><span id="mobile-orbit-label">🌀 Orbites</span> x<span id="mobile-orbit-speed-val">5</span></span>
                 <input type="range" id="mobile-orbit-speed-slider" min="1" max="20" value="5" step="1">
             </div>
-            <button class="hud-big-btn" id="mobile-colorblind-btn">👁️ Daltonien</button>
         </div>
     </div>
 
@@ -3056,7 +3049,6 @@
             else if (quizState === 'result') showQuizResult();
             set('btn-back-sun', (typeof currentView !== 'undefined' && currentView === 'celestial') ? T('btnBackNebuleuse') : T('btnBackSun'));
             set('colorblind-toggle', T('btnColorblind'));
-            set('mobile-colorblind-btn', T('btnColorblind'));
             set('mobile-orbit-label', T('orbitLabel'));
             set('welcome-title', T('welcomeTitle'));
             set('btn-toggle-extras', T('btnExtras'));
@@ -5057,12 +5049,8 @@
                 const flareCanvas = document.getElementById('flare-canvas');
                 if (flareCanvas) flareCanvas.style.filter = filterVal;
                 document.getElementById('colorblind-toggle').classList.toggle('active', isOn);
-                const mobileBtn = document.getElementById('mobile-colorblind-btn');
-                if (mobileBtn) mobileBtn.classList.toggle('active', isOn);
             };
             document.getElementById('colorblind-toggle').addEventListener('click', toggleColorblind);
-            const mobileColorblindBtn = document.getElementById('mobile-colorblind-btn');
-            if (mobileColorblindBtn) mobileColorblindBtn.addEventListener('click', toggleColorblind);
 
             // Tour, Quiz, Sound buttons
             document.getElementById('btn-start-tour').addEventListener('click', startTour);
