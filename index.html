@@ -1483,6 +1483,128 @@
         }
         #colorblind-toggle:hover { background: rgba(255,255,255,0.18); }
         #colorblind-toggle.active { background: rgba(100,200,255,0.25); border-color: #66ccff; color: #66ccff; }
+
+        /* ── Touch joystick ── */
+        #touch-controls {
+            position: fixed;
+            bottom: 28px;
+            left: 16px;
+            display: none;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 150;
+            pointer-events: auto;
+        }
+        .is-mobile #touch-controls { display: flex; }
+        #touch-joystick-zone {
+            width: 108px;
+            height: 108px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+            border: 2px solid rgba(255,255,255,0.18);
+            position: relative;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        #touch-joystick-knob {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.30);
+            border: 2px solid rgba(255,255,255,0.55);
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        #touch-vertical-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .touch-vbtn {
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.10);
+            border: 2px solid rgba(255,255,255,0.22);
+            color: #fff;
+            font-size: 1.4em;
+            display: flex; align-items: center; justify-content: center;
+            touch-action: none;
+            user-select: none; -webkit-user-select: none;
+            cursor: pointer;
+        }
+        .touch-vbtn:active { background: rgba(255,255,255,0.25); }
+
+        /* ── Mobile responsive ── */
+        @media (max-width: 768px) {
+            /* Welcome */
+            .welcome-title  { font-size: 2.2em; }
+            .welcome-rocket { font-size: 2.5em; margin-bottom: 15px; }
+            .welcome-subtitle { font-size: 1em; margin-bottom: 20px; }
+            .name-input { width: 86vw; font-size: 1.1em; padding: 12px 18px; }
+            .start-btn  { padding: 12px 32px; font-size: 1.1em; letter-spacing: 1px; }
+
+            /* Hide desktop-only */
+            .hud-controls { display: none !important; }
+            #custom-cursor { display: none !important; }
+            .minimap { display: none !important; }
+            .speed-indicator { display: none !important; }
+
+            /* Mode toggle — top center, compact */
+            .mode-toggle { top: 8px; padding: 5px 12px; gap: 8px; font-size: 0.82em; }
+
+            /* Action buttons — top-right, smaller */
+            .hud-action-buttons { top: 8px; right: 8px; gap: 3px; }
+            .hud-big-btn { font-size: 0.72em; padding: 5px 10px; }
+
+            /* Nav button — above joystick area */
+            .hud-nav-buttons { bottom: 160px; right: 10px; }
+            .hud-nav-btn { font-size: 0.72em; padding: 5px 10px; }
+
+            /* Tour bar — compact */
+            .tour-bar { top: 55px; padding: 7px 10px; gap: 7px; max-width: 94vw; flex-wrap: wrap; justify-content: center; }
+            .tour-btn  { padding: 5px 9px; font-size: 0.74em; }
+            .tour-dot  { width: 8px; height: 8px; }
+
+            /* Planet info — bottom sheet */
+            #planet-info {
+                right: 0; left: 0; top: auto; bottom: 0;
+                width: 100%; max-width: 100%;
+                max-height: 58vh;
+                border-radius: 18px 18px 0 0;
+                overflow-y: auto;
+                animation: slideInBottom 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            }
+            @keyframes slideInBottom {
+                from { transform: translateY(60px); opacity: 0; }
+                to   { transform: translateY(0);    opacity: 1; }
+            }
+
+            /* Galactic panel — top-left, narrower */
+            #galactic-panel {
+                top: 8px; left: 8px;
+                width: calc(55vw); max-width: 230px;
+                padding: 10px 12px; font-size: 0.78em;
+                max-height: 38vh; overflow-y: auto;
+            }
+            #galactic-panel h3 { font-size: 1em; margin-bottom: 8px; }
+
+            /* Language / colorblind */
+            #lang-toggle      { bottom: 8px; right: 8px; font-size: 0.88em; padding: 5px 10px; }
+            #colorblind-toggle{ bottom: 8px; left: 8px;  font-size: 0.78em; padding: 5px 9px; }
+
+            /* Quiz */
+            .quiz-card { padding: 22px 14px; border-radius: 16px; }
+            .quiz-question { font-size: 1.15em; margin-bottom: 18px; }
+            .quiz-answer   { padding: 11px 13px; font-size: 0.92em; }
+
+            /* Celestial panel */
+            .celestial-panel { padding: 16px 14px; }
+        }
     </style>
 </head>
 <body>
@@ -1571,6 +1693,17 @@
             <div id="hud-extras" style="display:none; width:100%">
                 <button class="hud-big-btn" id="btn-toggle-extras" onclick="toggleAllExtras()">⚙️ Extras</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Touch controls (mobile joystick) -->
+    <div id="touch-controls">
+        <div id="touch-joystick-zone">
+            <div id="touch-joystick-knob"></div>
+        </div>
+        <div id="touch-vertical-btns">
+            <button class="touch-vbtn" id="touch-up-btn">▲</button>
+            <button class="touch-vbtn" id="touch-down-btn">▼</button>
         </div>
     </div>
 
@@ -2726,11 +2859,19 @@
         const GA_DRIFT_PERIOD = 200;    // seconds for one full orbit of the galaxy around the GA
         const CELESTIAL_IDS = new Set(['trouNoir','asteroide','comete','nebuleuse','etoileNeutrons','pulsar','quasar','supernova','geanteRouge','naineBlanche','exoplanete','hubble','jamesWebb','voyager','galaxieSpirale','galaxieBarree','galaxieElliptique','galaxieLenticulaire','galaxieIrreguliere','galaxieNaine','galaxieAnnulaire']);
         let character;
+        // Détecte un vrai appareil tactile (pointer coarse = doigt, pas souris)
+        const isMobile = window.matchMedia('(pointer: coarse)').matches;
+        if (isMobile) document.body.classList.add('is-mobile');
         let moveSpeed = 3;
         let keys = {};
         let mouseX = 0, mouseY = 0;
         let isPointerLocked = false;
         let mouseButtons = { left: false, right: false };
+        // Touch joystick state
+        let joystick = { active: false, id: null, startX: 0, startY: 0, dx: 0, dy: 0 };
+        const JOYSTICK_MAX = 46;
+        let touchLook = { active: false, id: null, lastX: 0, lastY: 0 };
+        const touchKeys = { up: false, down: false };
         let yaw = 0, pitch = 0;
         let clock = new THREE.Clock();
         let raycaster = new THREE.Raycaster();
@@ -4712,9 +4853,21 @@
                 }
             });
 
-            // Click for pointer lock only
+            // Click for pointer lock (desktop) or planet raycast (mobile)
             renderer.domElement.addEventListener('click', (e) => {
-                if (!isPointerLocked) {
+                if (isMobile) {
+                    // Mobile: tap to select planet
+                    if (quizActive || launchAnimating) return;
+                    const rect = renderer.domElement.getBoundingClientRect();
+                    const nx = ((e.clientX - rect.left) / rect.width)  * 2 - 1;
+                    const ny = -((e.clientY - rect.top)  / rect.height) * 2 + 1;
+                    raycaster.setFromCamera(new THREE.Vector2(nx, ny), camera);
+                    const hits = raycaster.intersectObjects(planetMeshes, false);
+                    if (hits.length > 0) {
+                        const id = hits[0].object.userData.planetId;
+                        if (id) showPlanetInfo(id);
+                    }
+                } else if (!isPointerLocked) {
                     renderer.domElement.requestPointerLock();
                 }
             });
@@ -4770,6 +4923,87 @@
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             });
+
+            // ── Touch controls (mobile) ──────────────────────────────────
+            if (isMobile) {
+                const jZone = document.getElementById('touch-joystick-zone');
+                const jKnob = document.getElementById('touch-joystick-knob');
+
+                // Look-around: single finger drag on canvas
+                renderer.domElement.addEventListener('touchstart', (e) => {
+                    for (const t of e.changedTouches) {
+                        const jRect = jZone ? jZone.getBoundingClientRect() : null;
+                        const inJoy = jRect && t.clientX >= jRect.left && t.clientX <= jRect.right
+                                             && t.clientY >= jRect.top  && t.clientY <= jRect.bottom;
+                        if (!inJoy && !touchLook.active) {
+                            touchLook = { active: true, id: t.identifier, lastX: t.clientX, lastY: t.clientY };
+                        }
+                    }
+                }, { passive: true });
+
+                renderer.domElement.addEventListener('touchmove', (e) => {
+                    for (const t of e.changedTouches) {
+                        if (t.identifier === touchLook.id) {
+                            yaw   -= (t.clientX - touchLook.lastX) * 0.004;
+                            pitch -= (t.clientY - touchLook.lastY) * 0.004;
+                            pitch  = Math.max(-Math.PI / 2.2, Math.min(Math.PI / 2.2, pitch));
+                            touchLook.lastX = t.clientX;
+                            touchLook.lastY = t.clientY;
+                        }
+                    }
+                }, { passive: true });
+
+                const endLook = (e) => {
+                    for (const t of e.changedTouches) {
+                        if (t.identifier === touchLook.id) { touchLook.active = false; touchLook.id = null; }
+                    }
+                };
+                renderer.domElement.addEventListener('touchend',    endLook, { passive: true });
+                renderer.domElement.addEventListener('touchcancel', endLook, { passive: true });
+
+                // Joystick
+                if (jZone) {
+                    const resetJoy = () => {
+                        joystick.active = false; joystick.dx = 0; joystick.dy = 0;
+                        if (jKnob) jKnob.style.transform = 'translate(-50%, -50%)';
+                    };
+                    jZone.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        const t = e.changedTouches[0];
+                        const r = jZone.getBoundingClientRect();
+                        joystick = { active: true, id: t.identifier,
+                            startX: r.left + r.width / 2, startY: r.top + r.height / 2, dx: 0, dy: 0 };
+                    }, { passive: false });
+                    jZone.addEventListener('touchmove', (e) => {
+                        e.preventDefault();
+                        for (const t of e.changedTouches) {
+                            if (t.identifier !== joystick.id) continue;
+                            const dx = t.clientX - joystick.startX;
+                            const dy = t.clientY - joystick.startY;
+                            const dist = Math.sqrt(dx * dx + dy * dy);
+                            const cl   = Math.min(dist, JOYSTICK_MAX);
+                            const ang  = Math.atan2(dy, dx);
+                            joystick.dx = Math.cos(ang) * cl / JOYSTICK_MAX;
+                            joystick.dy = Math.sin(ang) * cl / JOYSTICK_MAX;
+                            if (jKnob) jKnob.style.transform =
+                                `translate(calc(-50% + ${Math.cos(ang)*cl}px), calc(-50% + ${Math.sin(ang)*cl}px))`;
+                        }
+                    }, { passive: false });
+                    jZone.addEventListener('touchend',    resetJoy);
+                    jZone.addEventListener('touchcancel', resetJoy);
+                }
+
+                // Vertical up/down buttons
+                const setupVBtn = (id, key) => {
+                    const btn = document.getElementById(id);
+                    if (!btn) return;
+                    btn.addEventListener('touchstart',  (e) => { e.preventDefault(); touchKeys[key] = true;  }, { passive: false });
+                    btn.addEventListener('touchend',    () => touchKeys[key] = false);
+                    btn.addEventListener('touchcancel', () => touchKeys[key] = false);
+                };
+                setupVBtn('touch-up-btn',   'up');
+                setupVBtn('touch-down-btn', 'down');
+            }
         }
 
         // ============================================
@@ -6809,6 +7043,7 @@
                 div.className = 'planet-label';
                 const labelName = (currentLang === 'en' && p.data.name_en) ? p.data.name_en : p.data.name;
                 div.innerHTML = `<span style="color:${p.data.color}">${labelName}</span><span class="label-line"></span><span class="label-dot" style="background:${p.data.color}"></span>`;
+                div.addEventListener('click', () => showPlanetInfo(id));
                 document.body.appendChild(div);
                 labelElements.push({ element: div, planetId: id });
             });
@@ -7055,28 +7290,31 @@
 
             isMoving = false;
             const speed = moveSpeed * delta * 30;
+            // Joystick axes: dy<0 = forward, dy>0 = back, dx<0 = left, dx>0 = right
+            const jFwd  = joystick.active ? -joystick.dy : 0;
+            const jSide = joystick.active ?  joystick.dx : 0;
 
-            if (!tourActive && (keys['ArrowUp'] || (mouseButtons.left && mouseButtons.right && isPointerLocked))) {
-                camera.position.addScaledVector(direction, speed);
+            if (!tourActive && (keys['ArrowUp'] || jFwd > 0.08 || (mouseButtons.left && mouseButtons.right && isPointerLocked))) {
+                camera.position.addScaledVector(direction, speed * (jFwd > 0.08 ? jFwd : 1));
                 isMoving = true;
             }
-            if (!tourActive && keys['ArrowDown']) {
-                camera.position.addScaledVector(direction, -speed);
+            if (!tourActive && (keys['ArrowDown'] || jFwd < -0.08)) {
+                camera.position.addScaledVector(direction, -speed * (jFwd < -0.08 ? -jFwd : 1));
                 isMoving = true;
             }
-            if (!tourActive && keys['ArrowLeft']) {
-                camera.position.addScaledVector(right, -speed);
+            if (!tourActive && (keys['ArrowLeft'] || jSide < -0.08)) {
+                camera.position.addScaledVector(right, -speed * (jSide < -0.08 ? -jSide : 1));
                 isMoving = true;
             }
-            if (!tourActive && keys['ArrowRight']) {
-                camera.position.addScaledVector(right, speed);
+            if (!tourActive && (keys['ArrowRight'] || jSide > 0.08)) {
+                camera.position.addScaledVector(right, speed * (jSide > 0.08 ? jSide : 1));
                 isMoving = true;
             }
-            if (keys['Space']) {
+            if (keys['Space'] || touchKeys.up) {
                 camera.position.y += speed;
                 isMoving = true;
             }
-            if (keys['ShiftLeft'] || keys['ShiftRight']) {
+            if (keys['ShiftLeft'] || keys['ShiftRight'] || touchKeys.down) {
                 camera.position.y -= speed;
                 isMoving = true;
             }
