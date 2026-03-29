@@ -1583,21 +1583,18 @@
                 align-self: flex-end;
             }
 
-            /* Action buttons — collapsed by default */
-            .hud-action-buttons { top: 8px; right: 8px; gap: 4px; align-items: flex-end; opacity: 1; }
+            /* Action buttons — hamburger, placé sous le mode-toggle */
+            .hud-action-buttons { top: 58px; right: 8px; gap: 4px; align-items: flex-end; opacity: 1; }
             .hud-action-buttons:not(.open) .hud-big-btn,
             .hud-action-buttons:not(.open) .hud-action-sep,
-            .hud-action-buttons:not(.open) #hud-extras { display: none !important; }
+            .hud-action-buttons:not(.open) #hud-extras,
+            .hud-action-buttons:not(.open) .hud-nav-btn { display: none !important; }
             .hud-action-buttons.open { opacity: 1; }
             .hud-big-btn { font-size: 0.78em; padding: 6px 12px; }
 
-            /* Back to sun — haut gauche, compact */
-            .hud-nav-buttons {
-                bottom: auto; right: auto;
-                top: 8px; left: 8px;
-                opacity: 1;
-            }
-            .hud-nav-btn { font-size: 0.75em; padding: 5px 11px; }
+            /* Masquer le conteneur nav séparé — le bouton est dans le hamburger */
+            .hud-nav-buttons { display: none !important; }
+            .hud-nav-btn { font-size: 0.78em; padding: 6px 12px; }
 
             /* Tour bar — compact */
             .tour-bar { top: 55px; padding: 7px 10px; gap: 7px; max-width: 94vw; flex-wrap: wrap; justify-content: center; }
@@ -4828,20 +4825,29 @@
             // Hamburger menu (mobile)
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const actionButtons = document.querySelector('.hud-action-buttons');
+            const closeMobileMenu = () => {
+                actionButtons.classList.remove('open');
+                if (mobileMenuBtn) mobileMenuBtn.textContent = '☰';
+            };
             if (mobileMenuBtn) {
+                // Sur mobile : déplacer #btn-back-sun dans le hamburger
+                if (isMobile) {
+                    const backBtn = document.getElementById('btn-back-sun');
+                    if (backBtn) {
+                        // Insérer juste après le hamburger, en premier dans le menu
+                        mobileMenuBtn.insertAdjacentElement('afterend', backBtn);
+                    }
+                }
                 mobileMenuBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     actionButtons.classList.toggle('open');
                     mobileMenuBtn.textContent = actionButtons.classList.contains('open') ? '✕' : '☰';
                 });
             }
-            // Close menu when any action button is tapped
-            ['btn-start-tour','btn-start-quiz','btn-solar-view','btn-celestial','btn-galactic','btn-toggle-extras'].forEach(id => {
+            // Fermer le menu quand on clique une action
+            ['btn-start-tour','btn-start-quiz','btn-solar-view','btn-celestial','btn-galactic','btn-toggle-extras','btn-back-sun'].forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.addEventListener('click', () => {
-                    actionButtons.classList.remove('open');
-                    if (mobileMenuBtn) mobileMenuBtn.textContent = '☰';
-                });
+                if (el) el.addEventListener('click', closeMobileMenu);
             });
             document.getElementById('tour-prev').addEventListener('click', tourPrev);
             document.getElementById('tour-next').addEventListener('click', tourNext);
