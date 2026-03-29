@@ -876,7 +876,9 @@
         #btn-toggle-extras { background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%); color: #d8f3dc; }
         #btn-toggle-extras.active { background: linear-gradient(135deg, #52b788 0%, #2d6a4f 100%); color: #fff; box-shadow: 0 0 14px rgba(82,183,136,0.5), inset 0 1px 0 rgba(255,255,255,0.2); }
         #mobile-menu-btn { display: none; }
-        #mobile-colorblind-btn { background: linear-gradient(135deg, #1a2a4a 0%, #0d1a2e 100%); }
+        #mobile-colorblind-btn { display: none; background: linear-gradient(135deg, #1a2a4a 0%, #0d1a2e 100%); }
+        #mobile-orbit-speed-control { display: none; }
+        .mobile-colorblind-sep { display: none; }
         .mobile-orbit-speed-control { background: linear-gradient(135deg, #1a2a4a 0%, #0d1a2e 100%); flex-direction: column; align-items: stretch; gap: 6px; cursor: default; }
         .mobile-orbit-speed-control span { font-size: 0.82em; color: #ccd6f6; }
         .mobile-orbit-speed-control #mobile-orbit-speed-val { color: #ffd700; }
@@ -1635,6 +1637,9 @@
                 border-radius: 22px;
             }
             .orbit-speed-control { display: none; } /* Masqué sur mobile, accessible via menu */
+            #mobile-colorblind-btn { display: flex; }
+            #mobile-orbit-speed-control { display: flex; }
+            .mobile-colorblind-sep { display: block; }
 
             /* ── Bouton hamburger ── */
             #mobile-menu-btn {
