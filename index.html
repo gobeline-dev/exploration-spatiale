@@ -877,6 +877,12 @@
         #btn-toggle-extras.active { background: linear-gradient(135deg, #52b788 0%, #2d6a4f 100%); color: #fff; box-shadow: 0 0 14px rgba(82,183,136,0.5), inset 0 1px 0 rgba(255,255,255,0.2); }
         #mobile-menu-btn { display: none; }
         #mobile-colorblind-btn { background: linear-gradient(135deg, #1a2a4a 0%, #0d1a2e 100%); }
+        .mobile-orbit-speed-control { background: linear-gradient(135deg, #1a2a4a 0%, #0d1a2e 100%); flex-direction: column; align-items: stretch; gap: 6px; cursor: default; }
+        .mobile-orbit-speed-control span { font-size: 0.82em; color: #ccd6f6; }
+        .mobile-orbit-speed-control #mobile-orbit-speed-val { color: #ffd700; }
+        #mobile-orbit-speed-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.18); outline: none; cursor: pointer; }
+        #mobile-orbit-speed-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #ffd700; cursor: pointer; box-shadow: 0 0 6px rgba(255,215,0,0.6); }
+        #mobile-orbit-speed-slider::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #ffd700; cursor: pointer; border: none; box-shadow: 0 0 6px rgba(255,215,0,0.6); }
         #mobile-colorblind-btn.active { background: rgba(100,200,255,0.25); border-color: #66ccff; color: #66ccff; box-shadow: 0 0 14px rgba(100,200,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2); }
         .btn-view { background: linear-gradient(135deg, #334155 0%, #1e293b 100%); }
         .btn-view.active { box-shadow: 0 0 20px rgba(255,255,255,0.4), inset 0 1px 0 rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.5); }
@@ -1670,6 +1676,9 @@
                 box-shadow: 0 12px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.04);
                 align-items: stretch;
                 gap: 4px;
+                max-height: calc(100svh - 80px);
+                overflow-y: auto;
+                overflow-x: hidden;
             }
             .hud-action-buttons.open #mobile-menu-btn {
                 align-self: flex-end;
@@ -1932,6 +1941,10 @@
                 <button class="hud-big-btn" id="btn-toggle-extras" onclick="toggleAllExtras()">⚙️ Extras</button>
             </div>
             <div class="hud-action-sep mobile-colorblind-sep"></div>
+            <div class="hud-big-btn mobile-orbit-speed-control" id="mobile-orbit-speed-control">
+                <span>🌀 Orbites x<span id="mobile-orbit-speed-val">5</span></span>
+                <input type="range" id="mobile-orbit-speed-slider" min="1" max="20" value="5" step="1">
+            </div>
             <button class="hud-big-btn" id="mobile-colorblind-btn">👁️ Daltonien</button>
         </div>
     </div>
@@ -5005,6 +5018,15 @@
             document.getElementById('orbit-speed-slider').addEventListener('input', function() {
                 orbitSpeedMultiplier = parseInt(this.value);
                 document.getElementById('orbit-speed-val').textContent = orbitSpeedMultiplier;
+                const mob = document.getElementById('mobile-orbit-speed-slider');
+                if (mob) { mob.value = orbitSpeedMultiplier; document.getElementById('mobile-orbit-speed-val').textContent = orbitSpeedMultiplier; }
+            });
+            const mobileOrbitSlider = document.getElementById('mobile-orbit-speed-slider');
+            if (mobileOrbitSlider) mobileOrbitSlider.addEventListener('input', function() {
+                orbitSpeedMultiplier = parseInt(this.value);
+                document.getElementById('mobile-orbit-speed-val').textContent = orbitSpeedMultiplier;
+                document.getElementById('orbit-speed-val').textContent = orbitSpeedMultiplier;
+                document.getElementById('orbit-speed-slider').value = orbitSpeedMultiplier;
             });
             document.getElementById('galactic-drift-slider').addEventListener('input', function() {
                 galDriftSpeedMultiplier = parseInt(this.value);
