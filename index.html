@@ -97,7 +97,15 @@
         .welcome-subtitle {
             color: #aabbcc;
             font-size: 1.2em;
-            margin-bottom: 40px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-release {
+            color: rgba(255,255,255,0.28);
+            font-size: 0.78em;
+            font-family: 'Nunito', sans-serif;
+            letter-spacing: 0.08em;
+            margin-bottom: 32px;
         }
 
         .welcome-rocket {
@@ -863,6 +871,7 @@
         .btn-quiz    { background: linear-gradient(135deg, #ff7a4a 0%, #cc3a15 100%); }
         #btn-toggle-extras { background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%); color: #d8f3dc; }
         #btn-toggle-extras.active { background: linear-gradient(135deg, #52b788 0%, #2d6a4f 100%); color: #fff; box-shadow: 0 0 14px rgba(82,183,136,0.5), inset 0 1px 0 rgba(255,255,255,0.2); }
+        #mobile-menu-btn { display: none; }
         .btn-view { background: linear-gradient(135deg, #334155 0%, #1e293b 100%); }
         .btn-view.active { box-shadow: 0 0 20px rgba(255,255,255,0.4), inset 0 1px 0 rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.5); }
         .btn-solar-view { background: linear-gradient(135deg, #ffd700 0%, #cc8800 100%); color: #111; }
@@ -1557,13 +1566,38 @@
             /* Mode toggle — top center, compact */
             .mode-toggle { top: 8px; padding: 5px 12px; gap: 8px; font-size: 0.82em; }
 
-            /* Action buttons — top-right, smaller */
-            .hud-action-buttons { top: 8px; right: 8px; gap: 3px; }
-            .hud-big-btn { font-size: 0.72em; padding: 5px 10px; }
+            /* Hamburger menu */
+            #mobile-menu-btn {
+                display: flex;
+                align-items: center; justify-content: center;
+                width: 40px; height: 40px;
+                border-radius: 50%;
+                background: rgba(0,0,0,0.65);
+                border: 1px solid rgba(255,255,255,0.22);
+                color: #fff; font-size: 1.2em;
+                cursor: pointer;
+                backdrop-filter: blur(10px);
+                pointer-events: auto;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+                flex-shrink: 0;
+                align-self: flex-end;
+            }
 
-            /* Nav button — above joystick area */
-            .hud-nav-buttons { bottom: 160px; right: 10px; }
-            .hud-nav-btn { font-size: 0.72em; padding: 5px 10px; }
+            /* Action buttons — collapsed by default */
+            .hud-action-buttons { top: 8px; right: 8px; gap: 4px; align-items: flex-end; opacity: 1; }
+            .hud-action-buttons:not(.open) .hud-big-btn,
+            .hud-action-buttons:not(.open) .hud-action-sep,
+            .hud-action-buttons:not(.open) #hud-extras { display: none !important; }
+            .hud-action-buttons.open { opacity: 1; }
+            .hud-big-btn { font-size: 0.78em; padding: 6px 12px; }
+
+            /* Back to sun — haut gauche, compact */
+            .hud-nav-buttons {
+                bottom: auto; right: auto;
+                top: 8px; left: 8px;
+                opacity: 1;
+            }
+            .hud-nav-btn { font-size: 0.75em; padding: 5px 11px; }
 
             /* Tour bar — compact */
             .tour-bar { top: 55px; padding: 7px 10px; gap: 7px; max-width: 94vw; flex-wrap: wrap; justify-content: center; }
@@ -1626,6 +1660,7 @@
             <div class="welcome-rocket">🚀</div>
             <h1 class="welcome-title" id="welcome-title">Explorateur Spatial</h1>
             <p class="welcome-subtitle" id="welcome-subtitle">Pars à la découverte du système solaire !</p>
+            <p class="welcome-release">v1.0 — 29 mars 2026</p>
             <div class="name-input-container">
                 <label class="name-label" id="name-label">Comment s'appelle ton astronaute ?</label>
                 <input type="text" class="name-input" id="player-name-input" placeholder="Ton prénom..." maxlength="15" autocomplete="off">
@@ -1684,6 +1719,7 @@
             <button class="hud-nav-btn btn-back-sun" id="btn-back-sun">☀️ Retour au Soleil</button>
         </div>
         <div class="hud-action-buttons">
+            <button id="mobile-menu-btn" aria-label="Menu">☰</button>
             <button class="hud-big-btn btn-view btn-solar-view" id="btn-solar-view" style="display:none">☀️ Système Solaire</button>
             <button class="hud-big-btn btn-view btn-celestial" id="btn-celestial">🌌 Corps célestes</button>
             <button class="hud-big-btn btn-view btn-galactic" id="btn-galactic">🌌 Notre Galaxie</button>
@@ -4788,6 +4824,25 @@
             document.getElementById('btn-solar-view').addEventListener('click', () => activateView('solar'));
             document.getElementById('btn-celestial').addEventListener('click', () => activateView('celestial'));
             document.getElementById('btn-galactic').addEventListener('click', () => activateView('galactic'));
+
+            // Hamburger menu (mobile)
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const actionButtons = document.querySelector('.hud-action-buttons');
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    actionButtons.classList.toggle('open');
+                    mobileMenuBtn.textContent = actionButtons.classList.contains('open') ? '✕' : '☰';
+                });
+            }
+            // Close menu when any action button is tapped
+            ['btn-start-tour','btn-start-quiz','btn-solar-view','btn-celestial','btn-galactic','btn-toggle-extras'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('click', () => {
+                    actionButtons.classList.remove('open');
+                    if (mobileMenuBtn) mobileMenuBtn.textContent = '☰';
+                });
+            });
             document.getElementById('tour-prev').addEventListener('click', tourPrev);
             document.getElementById('tour-next').addEventListener('click', tourNext);
             document.getElementById('tour-stop').addEventListener('click', () => stopTour());
