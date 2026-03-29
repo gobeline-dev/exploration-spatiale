@@ -5922,6 +5922,7 @@
         }
 
         let extrasActive = false;
+        const EXTRA_TOUR_IDS = ['pluton', 'eris'];
         function toggleAllExtras() {
             extrasActive = !extrasActive;
             Object.values(optionalObjects).forEach(obj => {
@@ -5930,6 +5931,19 @@
             });
             const btn = document.getElementById('btn-toggle-extras');
             if (btn) btn.classList.toggle('active', extrasActive);
+
+            // Si le tour est actif et qu'on désactive les extras alors qu'on visite un objet extra,
+            // reculer jusqu'au dernier objet non-extra de la visite.
+            if (!extrasActive && tourActive) {
+                const currentId = activeTourOrder[tourIndex];
+                if (EXTRA_TOUR_IDS.includes(currentId)) {
+                    // Retirer les extras de l'ordre du tour
+                    activeTourOrder = SOLAR_TOUR;
+                    // Revenir au dernier objet non-extra (neptune) : tourNext() fera +1
+                    tourIndex = activeTourOrder.length - 2;
+                    tourNext();
+                }
+            }
         }
 
         // ============================================
@@ -7863,7 +7877,13 @@
                     pitch = Math.asin(Math.max(-1, Math.min(1, toFirst.y)));
                 }
             } else {
-                activeTourOrder = SOLAR_TOUR;
+                // If extras are active, append visible extra planets (pluton, eris) after neptune
+                if (extrasActive) {
+                    const extraIds = ['pluton', 'eris'].filter(id => optionalObjects[id] && optionalObjects[id].mesh.visible && planets[id]);
+                    activeTourOrder = [...SOLAR_TOUR, ...extraIds];
+                } else {
+                    activeTourOrder = SOLAR_TOUR;
+                }
                 // Force aligned mode so planets are at fixed positions
                 if (orbitMode) toggleOrbitMode();
             }
