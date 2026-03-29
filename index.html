@@ -5051,7 +5051,8 @@
             const toggleColorblind = () => {
                 document.body.classList.toggle('colorblind-mode');
                 const isOn = document.body.classList.contains('colorblind-mode');
-                const filterVal = isOn ? "url('#colorblind-filter')" : '';
+                const filterUrl = `url('${location.href.split('#')[0]}#colorblind-filter')`;
+                const filterVal = isOn ? filterUrl : '';
                 if (renderer && renderer.domElement) renderer.domElement.style.filter = filterVal;
                 const flareCanvas = document.getElementById('flare-canvas');
                 if (flareCanvas) flareCanvas.style.filter = filterVal;
