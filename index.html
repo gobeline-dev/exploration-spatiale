@@ -200,15 +200,16 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 10px 20px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #aab8cc;
-            font-size: 0.85em;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(14px);
+            padding: 14px 28px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 0 24px rgba(0, 0, 0, 0.6);
+            color: #ccd6f6;
+            font-size: 0.95em;
             display: flex;
-            gap: 20px;
+            gap: 28px;
             align-items: center;
         }
 
@@ -216,22 +217,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 5px;
         }
 
         .hud-controls kbd {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 2px 8px;
-            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            padding: 4px 10px;
+            border-radius: 7px;
             color: #fff;
             font-family: monospace;
-            font-size: 0.95em;
+            font-size: 1em;
             white-space: nowrap;
         }
 
         .hud-controls small {
-            font-size: 0.78em;
-            color: #8892b0;
+            font-size: 0.8em;
+            color: #aab8cc;
             white-space: nowrap;
         }
 
@@ -1926,7 +1928,7 @@
         <div id="move-speed-popup">🚀 Vitesse x<span id="move-speed-val">3</span></div>
         <div class="hud-controls" id="hud-controls-list">
             <span><kbd>↑↓←→</kbd><small>Se déplacer</small></span>
-            <span><kbd>Clic G + Clic D</kbd><small>Avancer</small></span>
+            <span><kbd>Clic Gauche + Clic Droit</kbd><small>Avancer</small></span>
             <span><kbd>Espace</kbd><small>Monter</small></span>
             <span><kbd>⇧ Shift</kbd><small>Descendre</small></span>
             <span><kbd>Molette</kbd><small>Régler la vitesse</small></span>
@@ -2960,7 +2962,7 @@
                 modeAligned: "Alignées",
                 modeOrbit: "Orbites",
                 controls: [
-                    ["↑↓←→","Se déplacer"],["Clic G + Clic D","Avancer"],["Espace","Monter"],["⇧ Shift","Descendre"],
+                    ["↑↓←→","Se déplacer"],["Clic Gauche + Clic Droit","Avancer"],["Espace","Monter"],["⇧ Shift","Descendre"],
                     ["Molette","Régler la vitesse"],["Clic gauche + souris","Prendre le contrôle & regarder"],["O","Changer la vue"],["Clic droit","Libérer le curseur"]
                 ],
                 tourPrev: "← Précédente", tourNext: "Suivante →", tourStop: "Quitter",
@@ -2999,7 +3001,7 @@
                 modeAligned: "Aligned",
                 modeOrbit: "Orbits",
                 controls: [
-                    ["↑↓←→","Move around"],["Left + Right click","Move forward"],["Space","Go up"],["⇧ Shift","Go down"],
+                    ["↑↓←→","Move around"],["Left Click + Right Click","Move forward"],["Space","Go up"],["⇧ Shift","Go down"],
                     ["Scroll wheel","Adjust speed"],["Left click + mouse","Take control & look around"],["O","Switch view"],["Right click","Release cursor"]
                 ],
                 tourPrev: "← Previous", tourNext: "Next →", tourStop: "Quit",
