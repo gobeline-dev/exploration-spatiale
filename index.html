@@ -209,6 +209,14 @@
             font-size: 0.85em;
             display: flex;
             gap: 20px;
+            align-items: center;
+        }
+
+        .hud-controls span {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
         }
 
         .hud-controls kbd {
@@ -218,6 +226,13 @@
             color: #fff;
             font-family: monospace;
             font-size: 0.95em;
+            white-space: nowrap;
+        }
+
+        .hud-controls small {
+            font-size: 0.78em;
+            color: #8892b0;
+            white-space: nowrap;
         }
 
         .speed-indicator {
@@ -1910,14 +1925,14 @@
         </div>
         <div id="move-speed-popup">🚀 Vitesse x<span id="move-speed-val">3</span></div>
         <div class="hud-controls" id="hud-controls-list">
-            <span><kbd>↑↓←→</kbd> Se déplacer</span>
-            <span><kbd>Clic G + Clic D</kbd> Avancer</span>
-            <span><kbd>Espace</kbd> Monter</span>
-            <span><kbd>⇧ Shift</kbd> Descendre</span>
-            <span><kbd>Molette</kbd> Régler la vitesse</span>
-            <span><kbd>Souris</kbd> Regarder autour</span>
-            <span><kbd>O</kbd> Changer la vue</span>
-            <span><kbd>Clic droit</kbd> Libérer le curseur</span>
+            <span><kbd>↑↓←→</kbd><small>Se déplacer</small></span>
+            <span><kbd>Clic G + Clic D</kbd><small>Avancer</small></span>
+            <span><kbd>Espace</kbd><small>Monter</small></span>
+            <span><kbd>⇧ Shift</kbd><small>Descendre</small></span>
+            <span><kbd>Molette</kbd><small>Régler la vitesse</small></span>
+            <span><kbd>Clic gauche + souris</kbd><small>Prendre le contrôle & regarder</small></span>
+            <span><kbd>O</kbd><small>Changer la vue</small></span>
+            <span><kbd>Clic droit</kbd><small>Libérer le curseur</small></span>
         </div>
         <div class="tour-bar" id="tour-bar">
             <div class="tour-progress" id="tour-progress"></div>
@@ -2946,7 +2961,7 @@
                 modeOrbit: "Orbites",
                 controls: [
                     ["↑↓←→","Se déplacer"],["Clic G + Clic D","Avancer"],["Espace","Monter"],["⇧ Shift","Descendre"],
-                    ["Molette","Régler la vitesse"],["Souris","Regarder autour"],["O","Changer la vue"],["Clic droit","Libérer le curseur"]
+                    ["Molette","Régler la vitesse"],["Clic gauche + souris","Prendre le contrôle & regarder"],["O","Changer la vue"],["Clic droit","Libérer le curseur"]
                 ],
                 tourPrev: "← Précédente", tourNext: "Suivante →", tourStop: "Quitter",
                 btnTour: "🚀 Visite guidée", btnQuiz: "🧠 Quiz",
@@ -2985,7 +3000,7 @@
                 modeOrbit: "Orbits",
                 controls: [
                     ["↑↓←→","Move around"],["Left + Right click","Move forward"],["Space","Go up"],["⇧ Shift","Go down"],
-                    ["Scroll wheel","Adjust speed"],["Move mouse","Look around"],["O","Switch view"],["Right click","Release cursor"]
+                    ["Scroll wheel","Adjust speed"],["Left click + mouse","Take control & look around"],["O","Switch view"],["Right click","Release cursor"]
                 ],
                 tourPrev: "← Previous", tourNext: "Next →", tourStop: "Quit",
                 btnTour: "🚀 Guided Tour", btnQuiz: "🧠 Quiz",
@@ -3064,7 +3079,7 @@
             // HUD controls
             const ctrlEl = document.getElementById('hud-controls-list');
             if (ctrlEl) {
-                ctrlEl.innerHTML = T('controls').map(([k,l]) => `<span><kbd>${k}</kbd> ${l}</span>`).join('');
+                ctrlEl.innerHTML = T('controls').map(([k,l]) => `<span><kbd>${k}</kbd><small>${l}</small></span>`).join('');
             }
 
             // Refresh planet labels (names may change)
