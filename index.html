@@ -2050,7 +2050,7 @@
         <div class="quiz-card" id="quiz-card"></div>
     </div>
 
-    <button id="lang-toggle" title="Switch language / Changer de langue">🇫🇷 FR</button>
+    <button id="lang-toggle" title="Switch language / Changer de langue">🇬🇧 EN</button>
     <button id="colorblind-toggle" title="Mode daltonien">👁️ Daltonien</button>
     <svg width="0" height="0" style="position:absolute">
         <defs>
@@ -5054,7 +5054,7 @@
             document.getElementById('lang-toggle').addEventListener('click', () => {
                 currentLang = currentLang === 'fr' ? 'en' : 'fr';
                 const btn = document.getElementById('lang-toggle');
-                btn.textContent = currentLang === 'fr' ? '🇫🇷 FR' : '🇬🇧 EN';
+                btn.textContent = currentLang === 'fr' ? '🇬🇧 EN' : '🇫🇷 FR';
                 applyLang();
             });
             const toggleColorblind = () => {
